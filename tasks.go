@@ -2,9 +2,15 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"os/user"
+	"path/filepath"
+
+	"github.com/beego/bee/logger/colors"
 )
 
 type Todo struct {
@@ -22,8 +28,14 @@ func (t Todo) toString() string {
 }
 
 func getTodos() []Todo {
-	todos := make([]Todo, 0)
-	raw, err := ioutil.ReadFile("./todos.json")
+	var todos []Todo
+	path, err := getPath()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file := filepath.Join(path, ".todos.json")
+	raw, err := ioutil.ReadFile(file)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
@@ -32,11 +44,24 @@ func getTodos() []Todo {
 	return todos
 }
 
+func getPath() (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", errors.New("Cannot get home directory")
+	}
+
+	path := usr.HomeDir
+	return path, nil
+}
+
 func main() {
 	todos := getTodos()
-	fmt.Println(todos)
 	for _, todo := range todos {
-		fmt.Println(todo)
+		if todo.IsComplete == true {
+			fmt.Printf("%s is complete", colors.Blue(todo.Task))
+		} else {
+			fmt.Printf("%s is not yet complete", colors.Red(todo.Task))
+		}
 		fmt.Println(todo.toString())
 	}
 }
