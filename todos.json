@@ -1,0 +1,18 @@
+[
+  {
+    "task": "Laundry",
+    "isComplete": false
+  },
+  {
+    "task": "Finish todos",
+    "isComplete": false
+  },
+  {
+    "task": "Start task go application",
+    "isComplete": true
+  },
+  {
+    "task": "clean apartment",
+    "isComplete": false
+  }
+]
