@@ -176,6 +176,7 @@ func main() {
 	case args[0] == "add":
 		task := strings.Join(args[1:], " ")
 		addTodo(task)
+		listTodos()
 	case args[0] == "delete":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
@@ -213,5 +214,4 @@ func main() {
 		fmt.Println("Oops")
 	}
 
-	//updateTodo(1, "Update Todos", false)
 }
