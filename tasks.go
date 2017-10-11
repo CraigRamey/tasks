@@ -44,8 +44,6 @@ func updateTodo(n int, s string, b bool) error {
 		}
 		updatedTodos = append(updatedTodos, todo)
 	}
-	fmt.Println(todos)
-	fmt.Println(updatedTodos)
 
 	bytes, err := json.Marshal(updatedTodos)
 	if err != nil {
