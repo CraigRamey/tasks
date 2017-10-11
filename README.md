@@ -8,26 +8,32 @@ tasks that you need to take care of.
 ## COMMANDS
 
 #### Lists all the tasks
-```tasks
+```
+tasks
 ```
 
 #### Add a new task
-```tasks add <number>
+```
+tasks add <number>
 ```
 
 #### Delete a task
-```tasks delete <number>
+```
+tasks delete <number>
 ```
     
 #### Mark a task as complete
-```tasks complete <number>
+```
+tasks complete <number>
 ```
 
 #### Mark a task as incomplete
-```tasks incomplete <number>
+```
+tasks incomplete <number>
 ```
 
 #### Change the description of a task
-```tasks change <number> <new task description>
+```
+tasks change <number> <new task description>
 ```
 
