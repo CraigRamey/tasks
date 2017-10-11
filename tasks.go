@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strconv"
+	"strings"
 
 	"github.com/fatih/color"
 )
@@ -30,7 +32,7 @@ func (t Todo) toString() string {
 func updateTodo(n int, s string, b bool) error {
 	todos := getTodos()
 	var updatedTodos []Todo
-	if n+1 > len(todos) {
+	if n > len(todos) {
 		return errors.New("Todo not found, nothing updated")
 	}
 	for i, todo := range todos {
@@ -42,6 +44,8 @@ func updateTodo(n int, s string, b bool) error {
 		}
 		updatedTodos = append(updatedTodos, todo)
 	}
+	fmt.Println(todos)
+	fmt.Println(updatedTodos)
 
 	bytes, err := json.Marshal(updatedTodos)
 	if err != nil {
@@ -136,20 +140,9 @@ func getPath() (string, error) {
 	return path, nil
 }
 
-func main() {
-	path, err := getPath()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	file := filepath.Join(path, ".todos.json")
-	if _, err := os.Stat(file); os.IsNotExist(err) {
-		ioutil.WriteFile(file, nil, 0755)
-	}
-
+func listTodos() {
 	blue := color.New(color.FgBlue).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
-	updateTodo(1, "Update Todos", false)
 	todos := getTodos()
 
 	for i, todo := range todos {
@@ -160,5 +153,65 @@ func main() {
 			fmt.Printf("%d. %s %s\n", num, blue("[ ]"), red(todo.Task))
 		}
 	}
+}
 
+func main() {
+
+	path, err := getPath()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file := filepath.Join(path, ".todos.json")
+	if _, err := os.Stat(file); os.IsNotExist(err) {
+		ioutil.WriteFile(file, nil, 0755)
+	}
+
+	args := os.Args[1:]
+	todos := getTodos()
+
+	switch {
+	case len(args) < 1:
+		listTodos()
+	case args[0] == "add":
+		task := strings.Join(args[1:], " ")
+		addTodo(task)
+	case args[0] == "delete":
+		num, err := strconv.Atoi(args[1])
+		if err != nil {
+			panic(err)
+		}
+		deleteTodo(num)
+		listTodos()
+	case args[0] == "complete":
+		num, err := strconv.Atoi(args[1])
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(todos[num-1])
+		err = updateTodo(num, todos[num-1].Task, true)
+		if err != nil {
+			panic(err)
+		}
+		listTodos()
+	case args[0] == "incomplete":
+		num, err := strconv.Atoi(args[1])
+		if err != nil {
+			panic(err)
+		}
+		updateTodo(num, todos[num-1].Task, false)
+		listTodos()
+	case args[0] == "change":
+		num, err := strconv.Atoi(args[1])
+		if err != nil {
+			panic(err)
+		}
+		newTask := strings.Join(args[2:], " ")
+		updateTodo(num, newTask, todos[num-1].IsComplete)
+		listTodos()
+	default:
+		fmt.Println("Oops")
+	}
+
+	//updateTodo(1, "Update Todos", false)
 }
