@@ -2,15 +2,32 @@
 
 ## Command-line task manager / todo list
 
-tasks
-lists all tasks
+Tasks will create a .tasks.json file in your home directory to keep track of
+tasks that you need to take care of.
 
-tasks add #
+## COMMANDS
 
-tasks delete #
+#### Lists all the tasks
+```tasks
+```
 
-tasks complete #
+#### Add a new task
+```tasks add <number>
+```
 
-tasks incomplete #
+#### Delete a task
+```tasks delete <number>
+```
+    
+#### Mark a task as complete
+```tasks complete <number>
+```
 
-tasks change # <new task description>
+#### Mark a task as incomplete
+```tasks incomplete <number>
+```
+
+#### Change the description of a task
+```tasks change <number> <new task description>
+```
+
