@@ -138,6 +138,19 @@ func getPath() (string, error) {
 	return path, nil
 }
 
+func listCommands() {
+	green := color.New(color.FgGreen).SprintFunc()
+	magenta := color.New(color.FgMagenta).SprintFunc()
+	fmt.Printf("\n\n%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n\n\n",
+		magenta("List of Commands:"),
+		green("list - will list all tasks"),
+		green("add - create a new task"),
+		green("delete <num> - delete a task by ID"),
+		green("edit <num> <new description> - edit the text of a task by ID"),
+		green("complete <num> - mark a task complete by ID"),
+		green("incomplete <num> - mark a task incomplete by ID"))
+}
+
 func listTodos() {
 	blue := color.New(color.FgBlue).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
@@ -170,6 +183,8 @@ func main() {
 
 	switch {
 	case len(args) < 1:
+		listCommands()
+	case args[0] == "list":
 		listTodos()
 	case args[0] == "add":
 		task := strings.Join(args[1:], " ")
@@ -200,7 +215,7 @@ func main() {
 		}
 		updateTodo(num, todos[num-1].Task, false)
 		listTodos()
-	case args[0] == "change":
+	case args[0] == "edit":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
 			panic(err)
