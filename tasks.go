@@ -208,6 +208,8 @@ func main() {
 	todos := getTodos()
 
 	switch {
+	case len(args) < 1:
+		listCommands()
 	case args[0] == "list":
 		listTodos()
 	case args[0] == "add":
