@@ -188,8 +188,6 @@ func main() {
 	todos := getTodos()
 
 	switch {
-	case len(args) < 1:
-		listCommands()
 	case args[0] == "list":
 		listTodos()
 	case args[0] == "add":
@@ -230,7 +228,7 @@ func main() {
 		updateTodo(num, newTask, todos[num-1].IsComplete)
 		listTodos()
 	default:
-		fmt.Println("Oops, how did we get here?")
+		listCommands()
 	}
 
 }
