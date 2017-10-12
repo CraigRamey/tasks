@@ -14,6 +14,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// Todo is the structure of the tasks
 type Todo struct {
 	Task       string `json:"task"`
 	IsComplete bool   `json:"isComplete"`
@@ -57,7 +58,11 @@ func updateTodo(n int, s string, b bool) error {
 	}
 
 	file := filepath.Join(path, ".todos.json")
-	ioutil.WriteFile(file, bytes, 0755)
+	err = ioutil.WriteFile(file, bytes, 0755)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 	return nil
 }
 
@@ -87,7 +92,11 @@ func deleteTodo(n int) error {
 	}
 
 	file := filepath.Join(path, ".todos.json")
-	ioutil.WriteFile(file, bytes, 0755)
+	err = ioutil.WriteFile(file, bytes, 0755)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 	return nil
 }
 
@@ -111,7 +120,11 @@ func addTodo(t string) error {
 	}
 
 	file := filepath.Join(path, ".todos.json")
-	ioutil.WriteFile(file, bytes, 0755)
+	err = ioutil.WriteFile(file, bytes, 0755)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 	return nil
 }
 
@@ -129,7 +142,11 @@ func getTodos() []Todo {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
-	json.Unmarshal(raw, &todos)
+	err = json.Unmarshal(raw, &todos)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 	return todos
 }
 
@@ -181,7 +198,10 @@ func main() {
 
 	file := filepath.Join(path, ".todos.json")
 	if _, err := os.Stat(file); os.IsNotExist(err) {
-		ioutil.WriteFile(file, nil, 0755)
+		err := ioutil.WriteFile(file, nil, 0755)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 	}
 
 	args := os.Args[1:]
@@ -192,14 +212,22 @@ func main() {
 		listTodos()
 	case args[0] == "add":
 		task := strings.Join(args[1:], " ")
-		addTodo(task)
+		err := addTodo(task)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 		listTodos()
 	case args[0] == "delete":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
 			panic(err)
 		}
-		deleteTodo(num)
+		err = deleteTodo(num)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 		listTodos()
 	case args[0] == "complete":
 		num, err := strconv.Atoi(args[1])
@@ -209,23 +237,34 @@ func main() {
 		fmt.Println(todos[num-1])
 		err = updateTodo(num, todos[num-1].Task, true)
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 		listTodos()
 	case args[0] == "incomplete":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
-		updateTodo(num, todos[num-1].Task, false)
+		err = updateTodo(num, todos[num-1].Task, false)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 		listTodos()
 	case args[0] == "edit":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 		newTask := strings.Join(args[2:], " ")
-		updateTodo(num, newTask, todos[num-1].IsComplete)
+		err = updateTodo(num, newTask, todos[num-1].IsComplete)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
 		listTodos()
 	default:
 		listCommands()
