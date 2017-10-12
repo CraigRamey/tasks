@@ -223,7 +223,8 @@ func main() {
 	case args[0] == "delete":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 		err = deleteTodo(num)
 		if err != nil {
@@ -234,9 +235,9 @@ func main() {
 	case args[0] == "complete":
 		num, err := strconv.Atoi(args[1])
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
-		fmt.Println(todos[num-1])
 		err = updateTodo(num, todos[num-1].Task, true)
 		if err != nil {
 			fmt.Println(err.Error())
