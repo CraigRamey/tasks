@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -83,7 +82,8 @@ func deleteTodo(n int) error {
 
 	path, err := getPath()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	file := filepath.Join(path, ".todos.json")
@@ -94,7 +94,10 @@ func deleteTodo(n int) error {
 func addTodo(t string) error {
 	todos := getTodos()
 	todo := Todo{Task: t, IsComplete: false}
-	todos = append(todos, todo)
+	newTodos := append(todos, todo)
+	if len(todos) == len(newTodos) {
+		return errors.New("Failed to add task")
+	}
 	bytes, err := json.Marshal(todos)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -103,7 +106,8 @@ func addTodo(t string) error {
 
 	path, err := getPath()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	file := filepath.Join(path, ".todos.json")
@@ -115,7 +119,8 @@ func getTodos() []Todo {
 	var todos []Todo
 	path, err := getPath()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	file := filepath.Join(path, ".todos.json")
@@ -170,7 +175,8 @@ func main() {
 
 	path, err := getPath()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	file := filepath.Join(path, ".todos.json")
@@ -224,7 +230,7 @@ func main() {
 		updateTodo(num, newTask, todos[num-1].IsComplete)
 		listTodos()
 	default:
-		fmt.Println("Oops")
+		fmt.Println("Oops, how did we get here?")
 	}
 
 }
