@@ -107,7 +107,7 @@ func addTodo(t string) error {
 	if len(todos) == len(newTodos) {
 		return errors.New("Failed to add task")
 	}
-	bytes, err := json.Marshal(todos)
+	bytes, err := json.Marshal(newTodos)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
